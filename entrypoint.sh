@@ -15,5 +15,5 @@ if [ "$GIT" != "OFF" ]; then
 fi
 
 if [ -f "$NODEAPPDIR/index.js" ] && [ -f "$NODECONFIGDIR/config.js" ]; then
-  node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
+  npm install && node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
 fi

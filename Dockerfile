@@ -12,9 +12,10 @@ ENV PORT 8000
 ENV USERNAME nodejs
 ARG USERID=1000
 
-ENV NODEAPPDIR /home/$USERNAME/app
-ENV NODECONFIGDIR /home/$USERNAME/config
-ENV NODETMPDIR /home/$USERNAME/app/cache
+ENV NODEHOMEDIR /home/$USERNAME
+ENV NODEAPPDIR $NODEHOMEDIR/app
+ENV NODECONFIGDIR $NODEHOMEDIR/config
+ENV NODETMPDIR $NODEHOMEDIR/app/cache
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -35,8 +36,8 @@ RUN set -x &&\
   apt-get autoremove -y &&\
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*^
 
-COPY ./entrypoint.sh /home/$USERNAME/entrypoint.sh
-RUN chmod +x /home/$USERNAME/entrypoint.sh
+COPY ./entrypoint.sh $NODEHOMEDIR/entrypoint.sh
+RUN chmod +x $NODEHOMEDIR/entrypoint.sh
 
 HEALTHCHECK CMD curl -f http://localhost:$PORT/ || exit 1
 
@@ -44,6 +45,6 @@ USER $USERNAME
 WORKDIR $NODEAPPDIR
 VOLUME $NODEAPPDIR
 
-ENTRYPOINT ./entrypoint.sh
+ENTRYPOINT $NODEHOMEDIR/entrypoint.sh
 
 EXPOSE $PORT
