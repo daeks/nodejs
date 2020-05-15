@@ -1,7 +1,6 @@
 FROM debian:buster-slim
 LABEL maintainer="github.com/daeks"
 
-ENV GIT OFF
 ENV GIT_TOKEN <token>
 ENV GIT_URL https://$GIT_TOKEN@github.com/<user>/<repo>.git
 
@@ -28,7 +27,7 @@ RUN set -x &&\
   su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR}"
 
 RUN set -x &&\
-  if [ "$GIT" != "OFF" ]; then git clone $GIT_URL $NODEAPPDIR/ &&\
+  git clone $GIT_URL $NODEAPPDIR/\
   chmod -R 777 $NODEAPPDIR/cache; fi
 RUN chown -R $USERNAME:$USERNAME $NODEAPPDIR/
 
