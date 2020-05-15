@@ -1,6 +1,7 @@
 FROM debian:buster-slim
 LABEL maintainer="github.com/daeks"
 
+ENV GIT OFF
 ENV GIT_TOKEN <token>
 ENV GIT_URL https://$GIT_TOKEN@github.com/<user>/<repo>.git
 
@@ -26,6 +27,9 @@ RUN set -x &&\
   useradd -m -u $USERID $USERNAME &&\
   su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR}"
 
+RUN if [ "$GIT" != "OFF" ]; then git clone $GIT_URL $NODEAPPDIR/ && chmod -R 755 $NODEAPPDIR; fi"
+RUN chown -R $USERNAME:$USERNAME $NODEAPPDIR/
+
 RUN set -x &&\
   apt-get clean autoclean &&\
   apt-get autoremove -y &&\
@@ -37,6 +41,6 @@ USER $USERNAME
 WORKDIR $NODEAPPDIR
 VOLUME $NODEAPPDIR
 
-ENTRYPOINT git clone $GIT_URL $NODEAPPDIR/ && chmod -R 755 $NODEAPPDIR && npm install && node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
+ENTRYPOINT npm install && node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
 
 EXPOSE $PORT
