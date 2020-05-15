@@ -27,7 +27,7 @@ RUN set -x &&\
   useradd -m -u $USERID $USERNAME &&\
   su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR} &&\
   if [ "$GIT" != "OFF" ]; then git clone $GIT_URL $NODEAPPDIR/ &&\
-  chmod -R 777 $NODEAPPDIR/cache; fi"
+  chmod -R 755 $NODEAPPDIR; fi"
 
 RUN set -x &&\
   apt-get clean autoclean &&\
