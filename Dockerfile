@@ -1,7 +1,6 @@
 FROM debian:buster-slim
 LABEL maintainer="github.com/daeks"
 
-ENV GIT OFF
 ENV GIT_TOKEN <token>
 ENV GIT_URL https://$GIT_TOKEN@github.com/<user>/<repo>.git
 
