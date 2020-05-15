@@ -7,7 +7,7 @@ ENV GIT_URL https://$GIT_TOKEN@github.com/<user>/<repo>.git
 
 ENV PORT 8000
 
-ENV USERNAME=nodejs
+ENV USERNAME nodejs
 ARG USERID=1000
 
 ENV NODEAPPDIR /home/$USERNAME/app
@@ -25,9 +25,7 @@ ENV LANG en_US.UTF-8
 
 RUN set -x &&\
   useradd -m -u $USERID $USERNAME &&\
-  su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR} &&\
-  if [ "$GIT" != "OFF" ]; then git clone $GIT_URL $NODEAPPDIR/ &&\
-  chmod -R 755 $NODEAPPDIR; fi"
+  su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR}"
 
 RUN set -x &&\
   apt-get clean autoclean &&\
@@ -40,6 +38,6 @@ USER $USERNAME
 WORKDIR $NODEAPPDIR
 VOLUME $NODEAPPDIR
 
-ENTRYPOINT npm install && node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
+ENTRYPOINT git clone $GIT_URL $NODEAPPDIR/ && chmod -R 755 $NODEAPPDIR && npm install && node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
 
 EXPOSE $PORT
