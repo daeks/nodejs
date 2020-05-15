@@ -5,6 +5,8 @@ ENV GIT OFF
 ENV GIT_TOKEN <token>
 ENV GIT_URL https://$GIT_TOKEN@github.com/<user>/<repo>.git
 
+ADD . $GIT
+
 ENV PORT 8000
 
 ENV USERNAME nodejs
@@ -12,6 +14,7 @@ ARG USERID=1000
 
 ENV NODEAPPDIR /home/$USERNAME/app
 ENV NODECONFIGDIR /home/$USERNAME/config
+ENV NODETMPDIR /home/$USERNAME/app/cache
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -25,22 +28,22 @@ ENV LANG en_US.UTF-8
 
 RUN set -x &&\
   useradd -m -u $USERID $USERNAME &&\
-  su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR}"
-
-RUN if [ "$GIT" != "OFF" ]; then git clone $GIT_URL $NODEAPPDIR/ && chmod -R 755 $NODEAPPDIR; fi"
-RUN chown -R $USERNAME:$USERNAME $NODEAPPDIR/
+  su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR} && chmod -R 766 $NODEAPPDIR"
 
 RUN set -x &&\
   apt-get clean autoclean &&\
   apt-get autoremove -y &&\
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*^
-  
+
+COPY ./entrypoint.sh /home/$USERNAME/entrypoint.sh
+RUN chmod +x /home/$USERNAME/entrypoint.sh
+
 HEALTHCHECK CMD curl -f http://localhost:$PORT/ || exit 1
 
 USER $USERNAME
 WORKDIR $NODEAPPDIR
 VOLUME $NODEAPPDIR
 
-ENTRYPOINT npm install && node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
+ENTRYPOINT /entrypoint.sh
 
 EXPOSE $PORT
