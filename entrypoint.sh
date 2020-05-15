@@ -2,8 +2,8 @@
 cd $NODEAPPDIR
 if [ "$GIT" != "OFF" ]; then
   if [ -d "$NODEAPPDIR/.git" ]; then
-    git fetch origin
-    git pull origin master
+    git fetch --all origin
+    git reset --hard origin/master
   else
     git clone $GIT_URL $NODEAPPDIR/
     chown -R $USERNAME:$USERNAME $NODEAPPDIR/
