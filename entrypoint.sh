@@ -1,7 +1,7 @@
 #!/bin/bash
 cd $NODEAPPDIR
 if [ "$GIT" != "OFF" ]; then
-  if [ -f "$NODEAPPDIR/.git" ]; then
+  if [ -d "$NODEAPPDIR/.git" ]; then
     git fetch origin
     git pull origin master
   else
