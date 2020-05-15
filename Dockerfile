@@ -28,7 +28,7 @@ RUN set -x &&\
 
 RUN set -x &&\
   git clone $GIT_URL $NODEAPPDIR/\
-  chmod -R 777 $NODEAPPDIR/cache; fi
+  chmod -R 777 $NODEAPPDIR/cache
 RUN chown -R $USERNAME:$USERNAME $NODEAPPDIR/
 
 RUN set -x &&\
@@ -42,7 +42,6 @@ USER $USERNAME
 WORKDIR $NODEAPPDIR
 VOLUME $NODEAPPDIR
 
-# ENTRYPOINT npm install && node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
-ENTRYPOINT /bin/bash
+ENTRYPOINT npm install && node $NODEAPPDIR/index.js $NODECONFIGDIR/config.js
 
 EXPOSE $PORT
