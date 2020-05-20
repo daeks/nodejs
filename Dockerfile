@@ -59,12 +59,11 @@ COPY ./configs/custom/ ${APACHE_CONF_DIR}/custom
 RUN apache2ctl stop
 
 RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER ${APACHE_CONF_DIR} -Rf
+RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER /var/log/letsencrypt -Rf
+RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER /etc/letsencrypt -Rf
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
 RUN chmod +x $NODEHOMEDIR/setup.sh
-RUN $NODEHOMEDIR/setup.sh
-
-#RUN rm $NODEHOMEDIR/setup.sh
 
 COPY ./configs/crontab /etc/cron/crontab
 RUN crontab /etc/cron/crontab
