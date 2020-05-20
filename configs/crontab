@@ -1,0 +1,1 @@
+0 1 * * * certbot renew --no-random-sleep-on-renew --apache --no-self-upgrade 2>&1
