@@ -46,6 +46,7 @@ RUN set -x &&\
 
 RUN set -x &&\
   rm ${APACHE_CONF_DIR}/sites-enabled/000-default.conf ${APACHE_CONF_DIR}/sites-available/000-default.conf &&\
+  rm ${APACHE_CONF_DIR}/sites-enabled/default-ssl.conf &&\
   rm -r ${APACHE_WWW_DIR}/html &&\
   mkdir -p ${APACHE_CONF_DIR}/custom &&\
   ln -sf /dev/stdout /var/log/apache2/access.log &&\
@@ -60,7 +61,7 @@ RUN apache2ctl stop
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
 RUN chmod +x $NODEHOMEDIR/setup.sh
-CMD $NODEHOMEDIR/setup.sh
+RUN $NODEHOMEDIR/setup.sh
 
 #RUN rm $NODEHOMEDIR/setup.sh
 
