@@ -1,11 +1,11 @@
 #!/bin/bash
-if [ ! -z "$DOMAIN" ]; then
+if [ ! -z "$DOMAIN" ] && [ ! -z "$EMAIL" ]; then
   
   a2enmod rewrite
   a2ensite 000-custom-default
   a2dissite 000-custom-default-backup
 
-  certbot certonly --no-self-upgrade --agree-tos --standalone -d $DOMAIN --pre-hook "apache2ctl stop"
+  certbot certonly --no-self-upgrade --agree-tos --noninteractive --standalone -m $EMAIL -d $DOMAIN --pre-hook "apache2ctl stop"
   ln -s /etc/letsencrypt/live/$DOMAIN /etc/letsencrypt/certs
   
   a2enmod rewrite
