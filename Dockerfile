@@ -59,7 +59,9 @@ COPY ./configs/custom/ ${APACHE_CONF_DIR}/custom
 RUN apache2ctl stop
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
-RUN chmod +x $NODEHOMEDIR/setup.sh && $NODEHOMEDIR/setup.sh
+RUN chmod +x $NODEHOMEDIR/setup.sh
+CMD $NODEHOMEDIR/setup.sh
+
 #RUN rm $NODEHOMEDIR/setup.sh
 
 COPY ./configs/crontab /etc/cron/crontab
