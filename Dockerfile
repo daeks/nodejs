@@ -23,9 +23,13 @@ ENV APACHE_RUN_GROUP nodejs
 ENV APACHE_WWW_DIR /var/www
 ENV APACHE_CONF_DIR=/etc/apache2
 
+ENV APACHE_LIB_DIR /var/lib/apache2
 ENV APACHE_LOG_DIR /var/log/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
 ENV APACHE_PID_FILE /var/run/apache2.pid
+
+ENV CERTBOT_LOG_DIR /var/log/letsencrypt
+ENV CERTBOT_CONF_DIR /etc/letsencrypt
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -58,9 +62,10 @@ COPY ./configs/custom-default-ssl.conf ${APACHE_CONF_DIR}/sites-available/000-cu
 COPY ./configs/custom/ ${APACHE_CONF_DIR}/custom
 RUN apache2ctl stop
 
+RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER ${APACHE_LIB_DIR} -Rf
 RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER ${APACHE_CONF_DIR} -Rf
-RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER /var/log/letsencrypt -Rf
-RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER /etc/letsencrypt -Rf
+RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER ${CERTBOT_LOG_DIR} -Rf
+RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER ${CERTBOT_CONF_DIR} -Rf
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
 RUN chmod +x $NODEHOMEDIR/setup.sh
