@@ -17,27 +17,33 @@ ENV NODEAPPDIR $NODEHOMEDIR/app
 ENV NODECONFIGDIR $NODEHOMEDIR/config
 ENV NODETMPDIR $NODEAPPDIR/cache
 
-ENV APACHE_RUN_USER nodejs
-ENV APACHE_RUN_GROUP nodejs
+ENV APACHE_RUN_USER $USERNAME
+ENV APACHE_RUN_GROUP $USERNAME
 
 ENV APACHE_WWW_DIR /var/www
 ENV APACHE_CONF_DIR=/etc/apache2
+ENV APACHE_CONFDIR ${APACHE_CONF_DIR}
+ENV APACHE_ENVVARS $APACHE_CONF_DIR/envvars
 
+ENV APACHE_RUN_DIR /var/run
 ENV APACHE_WORK_DIR /var/lib/apache2
 ENV APACHE_LOG_DIR /var/log/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_PID_FILE /var/run/apache2.pid
+ENV APACHE_PID_FILE ${APACHE_RUN_DIR}/apache2.pid
+ENV LANG C
+
+ENV CERTBOT_CONF_DIR /etc/letsencrypt
 
 ENV CERTBOT_WORK_DIR /var/lib/letsencrypt
 ENV CERTBOT_LOG_DIR /var/log/letsencrypt
-ENV CERTBOT_CONF_DIR /etc/letsencrypt
 
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN set -x &&\
   apt-get update && apt-get upgrade -y &&\
   apt-get install -y --no-install-recommends --no-install-suggests \
-    procps locales rsyslog cron ca-certificates curl git nodejs npm nano certbot python-certbot-apache apache2
+    procps locales rsyslog cron ca-certificates curl git nodejs npm nano certbot python-certbot-apache apache2 &&\
+  mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
     
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
 ENV LANG en_US.UTF-8
