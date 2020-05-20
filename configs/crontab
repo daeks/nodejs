@@ -1,1 +1,1 @@
-0 1 * * * certbot renew --no-random-sleep-on-renew --apache --no-self-upgrade 2>&1
+0 1 * * * certbot renew --no-random-sleep-on-renew --standalone --no-self-upgrade --pre-hook "apache2ctl stop" --post-hook "apache2ctl start" 2>&1
