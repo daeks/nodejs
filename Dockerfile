@@ -46,7 +46,6 @@ RUN set -x &&\
 
 RUN set -x &&\
   rm ${APACHE_CONF_DIR}/sites-enabled/000-default.conf ${APACHE_CONF_DIR}/sites-available/000-default.conf &&\
-  rm ${APACHE_CONF_DIR}/sites-enabled/default-ssl.conf &&\
   rm -r ${APACHE_WWW_DIR}/html &&\
   mkdir -p ${APACHE_CONF_DIR}/custom &&\
   ln -sf /dev/stdout /var/log/apache2/access.log &&\
