@@ -7,6 +7,7 @@ if [ ! -z "$DOMAIN" ] && [ ! -z "$EMAIL" ]; then
   ln -s /etc/letsencrypt/live/$DOMAIN /etc/letsencrypt/certs
   
   a2enmod rewrite && a2enmod ssl
+  a2dissite default-ssl
   rm $APACHE_CONF_DIR/sites-available/default-ssl.conf
   
   a2ensite 000-custom-default-redirect
