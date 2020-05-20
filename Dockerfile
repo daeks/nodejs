@@ -53,6 +53,7 @@ RUN set -x &&\
   
 COPY ./configs/apache2.conf ${APACHE_CONF_DIR}/apache2.conf
 COPY ./configs/custom-default.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default.conf
+COPY ./configs/custom-default-backup.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default-backup.conf
 COPY ./configs/custom-default-ssl.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default-ssl.conf
 COPY ./configs/custom/ ${APACHE_CONF_DIR}/custom
 RUN apache2ctl stop
