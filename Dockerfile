@@ -22,14 +22,14 @@ ENV APACHE_RUN_GROUP $USERNAME
 
 ENV APACHE_WWW_DIR /var/www
 ENV APACHE_CONF_DIR=/etc/apache2
-ENV APACHE_CONFDIR ${APACHE_CONF_DIR}
+ENV APACHE_CONFDIR $APACHE_CONF_DIR
 ENV APACHE_ENVVARS $APACHE_CONF_DIR/envvars
 
 ENV APACHE_RUN_DIR /var/run
 ENV APACHE_WORK_DIR /var/lib/apache2
 ENV APACHE_LOG_DIR /var/log/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
-ENV APACHE_PID_FILE ${APACHE_RUN_DIR}/apache2.pid
+ENV APACHE_PID_FILE $APACHE_RUN_DIR/apache2.pid
 ENV LANG C
 
 ENV CERTBOT_CONF_DIR /etc/letsencrypt
@@ -56,25 +56,25 @@ RUN set -x &&\
   su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR} && chmod -R 766 $NODEAPPDIR"
 
 RUN set -x &&\
-  rm ${APACHE_CONF_DIR}/sites-enabled/000-default.conf ${APACHE_CONF_DIR}/sites-available/000-default.conf &&\
-  rm -r ${APACHE_WWW_DIR}/html &&\
-  mkdir -p ${APACHE_CONF_DIR}/custom &&\
+  rm $APACHE_CONF_DIR/sites-enabled/000-default.conf $APACHE_CONF_DIR/sites-available/000-default.conf &&\
+  rm -r $APACHE_WWW_DIR/html &&\
+  mkdir -p $APACHE_CONF_DIR/custom &&\
   ln -sf /dev/stdout /var/log/apache2/access.log &&\
   ln -sf /dev/stderr /var/log/apache2/error.log
   
-COPY ./configs/apache2.conf ${APACHE_CONF_DIR}/apache2.conf
-COPY ./configs/custom-default.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default.conf
-COPY ./configs/custom-default-redirect.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default-redirect.conf
-COPY ./configs/custom-default-ssl.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default-ssl.conf
-COPY ./configs/custom/ ${APACHE_CONF_DIR}/custom
+COPY ./configs/apache2.conf $APACHE_CONF_DIR/apache2.conf
+COPY ./configs/custom-default.conf $APACHE_CONF_DIR/sites-available/000-custom-default.conf
+COPY ./configs/custom-default-redirect.conf $APACHE_CONF_DIR/sites-available/000-custom-default-redirect.conf
+COPY ./configs/custom-default-ssl.conf $APACHE_CONF_DIR/sites-available/000-custom-default-ssl.conf
+COPY ./configs/custom/ $APACHE_CONF_DIR/custom
 RUN apache2ctl stop
 
-RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER ${APACHE_WORK_DIR} -Rf
-RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER ${APACHE_CONF_DIR} -Rf
+RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER $APACHE_WORK_DIR -Rf
+RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER $APACHE_CONF_DIR -Rf
 
-RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER ${CERTBOT_WORK_DIR} -Rf
-RUN mkdir -p ${CERTBOT_LOG_DIR} && chown $APACHE_RUN_USER:$APACHE_RUN_USER ${CERTBOT_LOG_DIR} -Rf
-RUN mkdir -p ${CERTBOT_CONF_DIR} && chown $APACHE_RUN_USER:$APACHE_RUN_USER ${CERTBOT_CONF_DIR} -Rf
+RUN mkdir -p $CERTBOT_WORK_DIR && chown $APACHE_RUN_USER:$APACHE_RUN_USER $CERTBOT_WORK_DIR -Rf
+RUN mkdir -p $CERTBOT_LOG_DIR && chown $APACHE_RUN_USER:$APACHE_RUN_USER $CERTBOT_LOG_DIR -Rf
+RUN mkdir -p $CERTBOT_CONF_DIR && chown $APACHE_RUN_USER:$APACHE_RUN_USER $CERTBOT_CONF_DIR -Rf
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
 RUN chmod +x $NODEHOMEDIR/setup.sh
@@ -91,7 +91,7 @@ RUN set -x &&\
   apt-get autoremove -y &&\
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*^
 
-HEALTHCHECK CMD curl -f http://localhost:$PORT/ && curl -f http://localhost/ && curl -f https://localhost/ || exit 1
+HEALTHCHECK CMD curl -f http://localhost:$PORT/ && curl -f http://$DOMAIN/ && curl -f https://$DOMAIN/ || exit 1
 
 USER $USERNAME
 WORKDIR $NODEAPPDIR
