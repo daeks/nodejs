@@ -48,16 +48,13 @@ RUN set -x &&\
   rm ${APACHE_CONF_DIR}/sites-enabled/000-default.conf ${APACHE_CONF_DIR}/sites-available/000-default.conf &&\
   rm -r ${APACHE_WWW_DIR}/html &&\
   ln -sf /dev/stdout /var/log/apache2/access.log &&\
-  ln -sf /dev/stderr /var/log/apache2/error.log &&\
-  chown $APACHE_RUN_USER:$APACHE_RUN_USER ${PHP_DATA_DIR} -Rf
+  ln -sf /dev/stderr /var/log/apache2/error.log
   
-RUN a2enmod ssl
-RUN a2enmod proxy && a2enmod proxy_html && a2enmod proxy_http && a2enmod lbmethod_byrequests
-
 COPY ./configs/apache2.conf ${APACHE_CONF_DIR}/apache2.conf
-COPY ./configs/custom-default.conf ${APACHE_CONF_DIR}/sites-available/custom-default.conf
-COPY ./configs/custom-default-ssl.conf ${APACHE_CONF_DIR}/sites-available/custom-default-ssl.conf
+COPY ./configs/custom-default.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default.conf
+COPY ./configs/custom-default-ssl.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default-ssl.conf
 COPY ./custom/ ${APACHE_CONF_DIR}/custom
+RUN service apache2 stop
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
 RUN chmod +x $NODEHOMEDIR/setup.sh && $NODEHOMEDIR/setup.sh
