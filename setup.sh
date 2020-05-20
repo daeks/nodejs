@@ -1,6 +1,6 @@
 #!/bin/bash
 cd $NODEAPPDIR
-if [ -z "$CERT_DOMAINS" ]; && [ -z "$CERT_EMAIL"]; then
+if [ ! -z "$CERT_DOMAINS" ] && [ ! -z "$CERT_EMAIL" ]; then
   a2ensite 000-custom-default
   service apache2 start
 
