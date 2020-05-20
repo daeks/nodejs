@@ -1,5 +1,4 @@
 #!/bin/bash
-cd $NODEAPPDIR
 if [ ! -z "$CERT_DOMAIN" ] && [ ! -z "$CERT_EMAIL" ]; then
   a2enmod rewrite
   a2ensite 000-custom-default
@@ -10,7 +9,7 @@ if [ ! -z "$CERT_DOMAIN" ] && [ ! -z "$CERT_EMAIL" ]; then
   a2enmod rewrite
   a2ensite 000-custom-default
   
-  a2enmod ssl
+  a2enmod ssl && a2enmod headers
   a2enmod proxy && a2enmod proxy_html && a2enmod proxy_http && a2enmod lbmethod_byrequests
   a2ensite 000-custom-default-ssl
   
