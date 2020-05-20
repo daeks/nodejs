@@ -54,7 +54,7 @@ RUN set -x &&\
 COPY ./configs/apache2.conf ${APACHE_CONF_DIR}/apache2.conf
 COPY ./configs/custom-default.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default.conf
 COPY ./configs/custom-default-ssl.conf ${APACHE_CONF_DIR}/sites-available/000-custom-default-ssl.conf
-COPY ./custom/ ${APACHE_CONF_DIR}/custom
+COPY ./configs/custom/ ${APACHE_CONF_DIR}/custom
 RUN service apache2 stop
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
