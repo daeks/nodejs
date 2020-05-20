@@ -60,7 +60,7 @@ RUN apache2ctl stop
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
 RUN chmod +x $NODEHOMEDIR/setup.sh && $NODEHOMEDIR/setup.sh
-RUN rm $NODEHOMEDIR/setup.sh
+#RUN rm $NODEHOMEDIR/setup.sh
 
 COPY ./configs/crontab /etc/cron/crontab
 RUN crontab /etc/cron/crontab
