@@ -36,5 +36,5 @@ else
   a2ensite 000-custom-default
 fi
 
-apache2ctl restart
+sudo apache2ctl restart
 
