@@ -42,7 +42,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN set -x &&\
   apt-get update && apt-get upgrade -y &&\
   apt-get install -y --no-install-recommends --no-install-suggests \
-    procps locales rsyslog cron ca-certificates curl git nodejs npm nano certbot python-certbot-apache apache2 &&\
+    sudo procps locales rsyslog cron ca-certificates curl git nodejs npm nano certbot python-certbot-apache apache2 &&\
   mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
     
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
@@ -52,8 +52,10 @@ ENV TZ=Europe/Berlin
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN set -x &&\
-  useradd -m -u $USERID $USERNAME &&\
-  useradd -a -g $APACHE_RUN_GROUP $USERNAME &&\
+  useradd -m -u $USERID -G sudo $USERNAME &&\
+
+  sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
+  sed -i /etc/sudoers -re 's/^#includedir.*/## **Removed the include directive** ##"/g' && \
   su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR} && chmod -R 766 $NODEAPPDIR"
 
 RUN set -x &&\
