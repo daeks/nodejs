@@ -72,15 +72,15 @@ COPY ./configs/custom-default-ssl.conf $APACHE_CONF_DIR/sites-available/000-cust
 COPY ./configs/custom/ $APACHE_CONF_DIR/custom
 RUN apache2ctl stop
 
-COPY ./setup.sh $NODEHOMEDIR/setup.sh
-RUN chmod +x $NODEHOMEDIR/setup.sh
+COPY ./apache.sh $NODEHOMEDIR/apache.sh
+RUN chmod +x $NODEHOMEDIR/apache.sh
 
 COPY ./configs/crontab /etc/cron/crontab
 RUN crontab /etc/cron/crontab
 RUN service rsyslog start && service cron start
 
-COPY ./entrypoint.sh $NODEHOMEDIR/entrypoint.sh
-RUN chmod +x $NODEHOMEDIR/entrypoint.sh
+COPY ./nodejs.sh $NODEHOMEDIR/nodejs.sh
+RUN chmod +x $NODEHOMEDIR/nodejs.sh
 
 RUN set -x &&\
   apt-get clean autoclean &&\
@@ -93,6 +93,6 @@ USER $USERNAME
 WORKDIR $NODEAPPDIR
 VOLUME $NODEAPPDIR
 
-ENTRYPOINT sudo $NODEHOMEDIR/setup.sh && $NODEHOMEDIR/entrypoint.sh
+ENTRYPOINT sudo $NODEHOMEDIR/apache.sh && $NODEHOMEDIR/nodejs.sh
 
 EXPOSE $PORT 80 443
