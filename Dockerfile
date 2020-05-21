@@ -75,19 +75,22 @@ RUN apache2ctl stop
 COPY ./apache.sh $NODEHOMEDIR/apache.sh
 RUN chmod +x $NODEHOMEDIR/apache.sh
 
+COPY ./nodejs.sh $NODEHOMEDIR/nodejs.sh
+RUN chmod +x $NODEHOMEDIR/nodejs.sh
+
+COPY ./status.sh $NODEHOMEDIR/status.sh
+RUN chmod +x $NODEHOMEDIR/status.sh
+
 COPY ./configs/crontab /etc/cron/crontab
 RUN crontab /etc/cron/crontab
 RUN service rsyslog start && service cron start
-
-COPY ./nodejs.sh $NODEHOMEDIR/nodejs.sh
-RUN chmod +x $NODEHOMEDIR/nodejs.sh
 
 RUN set -x &&\
   apt-get clean autoclean &&\
   apt-get autoremove -y &&\
   rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*^
 
-HEALTHCHECK CMD curl -f http://localhost:$PORT/ && curl -f http://$DOMAIN/ && curl -f https://$DOMAIN/ || exit 1
+HEALTHCHECK CMD $NODEHOMEDIR/status.sh
 
 USER $USERNAME
 WORKDIR $NODEAPPDIR

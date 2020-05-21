@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ ! -z "$DOMAIN" ] && [ ! -z "$EMAIL" ]; then
-  if [ ! -f $CERTBOT_CONF_DIR/live/$DOMAIN/cert.pem ]; then    
+  if [ ! -f $CERTBOT_CONF_DIR/live/$DOMAIN/cert.pem ]; then
     certbot certonly --no-self-upgrade --agree-tos --noninteractive --standalone \
       --work-dir $CERTBOT_WORK_DIR --config-dir $CERTBOT_CONF_DIR --logs-dir $CERTBOT_LOG_DIR \
       -m $EMAIL -d $DOMAIN --pre-hook "apache2ctl stop"
