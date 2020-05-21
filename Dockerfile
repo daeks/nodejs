@@ -53,13 +53,13 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN set -x &&\
   useradd -m -u $USERID -G sudo $USERNAME &&\
-
-  sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' && \
-  sed -i /etc/sudoers -re 's/^#includedir.*/## **Removed the include directive** ##"/g' && \
+  sed -i /etc/sudoers -re 's/^%sudo.*/%sudo ALL=(ALL:ALL) NOPASSWD: ALL/g' &&\
+  sed -i /etc/sudoers -re 's/^#includedir.*/## **Removed the include directive** ##"/g' &&\
   su $USERNAME -c "mkdir -p ${NODEAPPDIR} && mkdir -p ${NODECONFIGDIR} && chmod -R 766 $NODEAPPDIR"
 
 RUN set -x &&\
-  rm $APACHE_CONF_DIR/sites-enabled/000-default.conf $APACHE_CONF_DIR/sites-available/000-default.conf &&\
+  rm $APACHE_CONF_DIR/sites-available/000-default.conf $APACHE_CONF_DIR/sites-enabled/000-default.conf &&\
+  rm $APACHE_CONF_DIR/sites-available/default-ssl.conf &&\
   rm -r $APACHE_WWW_DIR/html &&\
   mkdir -p $APACHE_CONF_DIR/custom &&\
   ln -sf /dev/stdout $APACHE_LOG_DIR/access.log &&\
@@ -72,9 +72,13 @@ COPY ./configs/custom-default-ssl.conf $APACHE_CONF_DIR/sites-available/000-cust
 COPY ./configs/custom/ $APACHE_CONF_DIR/custom
 RUN apache2ctl stop
 
-RUN mkdir -p $CERTBOT_WORK_DIR && chown $APACHE_RUN_USER:$APACHE_RUN_USER $CERTBOT_WORK_DIR -Rf
-RUN mkdir -p $CERTBOT_LOG_DIR && chown $APACHE_RUN_USER:$APACHE_RUN_USER $CERTBOT_LOG_DIR -Rf
-RUN mkdir -p $CERTBOT_CONF_DIR && chown $APACHE_RUN_USER:$APACHE_RUN_USER $CERTBOT_CONF_DIR -Rf
+# RUN chown $APACHE_RUN_USER:$APACHE_RUN_GROUP $APACHE_WORK_DIR -Rf
+# RUN chown $APACHE_RUN_USER:$APACHE_RUN_GROUP $APACHE_LOG_DIR -Rf
+# RUN chown $APACHE_RUN_USER:$APACHE_RUN_GROUP $APACHE_CONF_DIR -Rf
+
+# RUN mkdir -p $CERTBOT_WORK_DIR && chown $USERNAME:$USERNAME $CERTBOT_WORK_DIR -Rf
+# RUN mkdir -p $CERTBOT_LOG_DIR && chown $USERNAME:$USERNAME $CERTBOT_LOG_DIR -Rf
+# RUN mkdir -p $CERTBOT_CONF_DIR && chown $USERNAME:$USERNAME $CERTBOT_CONF_DIR -Rf
 
 COPY ./setup.sh $NODEHOMEDIR/setup.sh
 RUN chmod +x $NODEHOMEDIR/setup.sh
