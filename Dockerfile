@@ -59,8 +59,8 @@ RUN set -x &&\
   rm $APACHE_CONF_DIR/sites-enabled/000-default.conf $APACHE_CONF_DIR/sites-available/000-default.conf &&\
   rm -r $APACHE_WWW_DIR/html &&\
   mkdir -p $APACHE_CONF_DIR/custom &&\
-  ln -sf /dev/stdout /var/log/apache2/access.log &&\
-  ln -sf /dev/stderr /var/log/apache2/error.log
+  ln -sf /dev/stdout $APACHE_LOG_DIR/access.log &&\
+  ln -sf /dev/stderr $APACHE_LOG_DIR/error.log
   
 COPY ./configs/apache2.conf $APACHE_CONF_DIR/apache2.conf
 COPY ./configs/custom-default.conf $APACHE_CONF_DIR/sites-available/000-custom-default.conf
@@ -70,6 +70,7 @@ COPY ./configs/custom/ $APACHE_CONF_DIR/custom
 RUN apache2ctl stop
 
 RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER $APACHE_WORK_DIR -Rf
+RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER $APACHE_LOG_DIR -Rf
 RUN chown $APACHE_RUN_USER:$APACHE_RUN_USER $APACHE_CONF_DIR -Rf
 
 RUN mkdir -p $CERTBOT_WORK_DIR && chown $APACHE_RUN_USER:$APACHE_RUN_USER $CERTBOT_WORK_DIR -Rf
