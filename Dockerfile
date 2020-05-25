@@ -42,7 +42,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN set -x &&\
   apt-get update && apt-get upgrade -y &&\
   apt-get install -y --no-install-recommends --no-install-suggests \
-    sudo procps locales rsyslog cron ca-certificates curl git nodejs npm nano certbot python-certbot-apache apache2 &&\
+    sudo procps htop locales rsyslog cron ca-certificates curl git nodejs npm nano certbot python-certbot-apache apache2 &&\
   mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
     
 RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && locale-gen
@@ -98,4 +98,4 @@ VOLUME $NODEAPPDIR
 
 ENTRYPOINT sudo -E $NODEHOMEDIR/apache.sh && $NODEHOMEDIR/nodejs.sh
 
-EXPOSE $PORT 80 443
+EXPOSE $PORT/tcp 80/tcp 443/tcp
